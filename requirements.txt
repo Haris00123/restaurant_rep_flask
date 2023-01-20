@@ -1,0 +1,11 @@
+certifi @ file:///croot/certifi_1671487769961/work/certifi
+click==8.1.3
+Flask @ file:///croot/flask_1671217343254/work
+gunicorn @ file:///tmp/build/80754af9/gunicorn_1617120647592/work
+importlib-metadata==6.0.0
+itsdangerous==2.1.2
+Jinja2 @ file:///croot/jinja2_1666908132255/work
+MarkupSafe @ file:///opt/conda/conda-bld/markupsafe_1654597864307/work
+psycopg2 @ file:///croot/psycopg2_1666817453215/work
+Werkzeug @ file:///croot/werkzeug_1671215996852/work
+zipp @ file:///croot/zipp_1672387121353/work
