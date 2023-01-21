@@ -83,7 +83,7 @@ def get_restaurant_names(city_name):
 def get_top_foods(restaurant_id):
 	query='''SELECT food
 	FROM 
-	(SELECT *, DENSE_RANK() OVER (ORDER BY count DESC) AS rnk
+	(SELECT *, DENSE_RANK() OVER (ORDER BY score DESC) AS rnk
 	FROM top_foods
 	WHERE restaurant_id=%s) AS tmp
 	WHERE rnk<=5'''
