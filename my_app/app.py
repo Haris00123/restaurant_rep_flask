@@ -46,7 +46,7 @@ def get_curr_cities():
 
 @app.get('/get_restaurants_names/<city_name>')
 def get_restaurant_names(city_name):
-	query='''SELECT DISTINCT restaurant_id,restaurant_name,restaurant_address FROM top_foods_restaurants
+	query='''SELECT DISTINCT restaurant_id,restaurant_name,restaurant_address FROM top_foods
 	WHERE city=%s'''
 	values=(city_name.lower(),)
 	cursor.execute(query,values)
