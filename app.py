@@ -133,7 +133,9 @@ def get_info():
 	results_json['reviews']=int(2*10e6)
 	results_json['restaurants']=5000
 
-	return json.dumps(results_json)
+	response=jsonify(results_json)
+	response.headers.add('Access-Control-Allow-Origin', '*')
+	return response
 
 if __name__=="__main__":
 	app.run()
