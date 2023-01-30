@@ -14,6 +14,10 @@ password='AVNS_YKtI3cC827SO2M3fZ12'
 
 cursor=conn.cursor()
 
+@app.route('/')
+def hello():
+	return 'hello, world!'
+
 @app.get('/get_cities')
 def get_curr_cities():
 	query='''SELECT DISTINCT(city) FROM restaurants_list'''
