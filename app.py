@@ -46,7 +46,9 @@ def get_curr_cities():
 		internal_dict['city_name']=c[0].capitalize()
 		cities.append(internal_dict)
 	results_json['cities']=cities
-	return json.dumps(results_json)
+	response=flask.jsonify(results_json)
+	response.headers.add('Access-Control-Allow-Origin', '*')
+	return response
 
 @app.get('/get_restaurants_names/<city_name>')
 def get_restaurant_names(city_name):
