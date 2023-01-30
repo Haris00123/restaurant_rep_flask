@@ -50,11 +50,47 @@ def get_curr_cities():
 	response.headers.add('Access-Control-Allow-Origin', '*')
 	return response
 
-@app.get('/get_restaurants_names/<city_name>')
-def get_restaurant_names(city_name):
-	query='''SELECT DISTINCT restaurant_id,restaurant_name,restaurant_address FROM top_foods
-	WHERE city = %s'''
-	values=(city_name.lower(),)
+# @app.get('/get_restaurants_names/<city_name>')
+# def get_restaurant_names(city_name):
+# 	query='''SELECT DISTINCT restaurant_id,restaurant_name,restaurant_address FROM top_foods
+# 	WHERE city = %s'''
+# 	values=(city_name.lower(),)
+# 	#cursor.execute(query,values)
+# 	try:
+# 		cursor.execute(query,values)
+# 	except:
+# 		conn.rollback()
+# 		return None
+# 	returns=cursor.fetchall()
+	
+# 	results_json={}
+
+# 	if len(returns)>0:
+# 		results_json['status']='succesful'
+# 	else:
+# 		results_json['status']='unsuccesful'
+	
+# 	return_count=len(returns)
+# 	results_json['restaurant_count']=return_count
+# 	restaurants=[]
+
+# 	for r in returns:
+# 		internal_dict={}
+# 		internal_dict['id']=r[0]
+# 		internal_dict['restaurant_name']=r[1].capitalize()
+# 		internal_dict['restaurant_address']=r[2]
+# 		restaurants.append(internal_dict)
+
+# 	results_json['restaurants']=restaurants	
+# 	response=jsonify(results_json)
+# 	response.headers.add('Access-Control-Allow-Origin', '*')
+# 	return response
+
+@app.get('/get_restaurants_names/<restaurant_search>')
+def get_restaurant_names(restaurant_search):
+	query='''SELECT * FROM top_foods_restaurants
+			WHERE SIMILARITY(restaurant_name,%s)>0.3;'''
+	values=(restaurant_search.lower(),)
 	#cursor.execute(query,values)
 	try:
 		cursor.execute(query,values)
@@ -79,6 +115,7 @@ def get_restaurant_names(city_name):
 		internal_dict['id']=r[0]
 		internal_dict['restaurant_name']=r[1].capitalize()
 		internal_dict['restaurant_address']=r[2]
+		internal_dict['restaurant_city']=r[3]
 		restaurants.append(internal_dict)
 
 	results_json['restaurants']=restaurants	
@@ -129,9 +166,9 @@ def get_top_foods(restaurant_id):
 def get_info():
 	results_json={}
 	results_json['status']='succesful'
-	results_json['cities']=1
-	results_json['reviews']=int(2*10e6)
-	results_json['restaurants']=5000
+	results_json['cities']=2
+	results_json['reviews']=int(4*10e6)
+	results_json['restaurants']=10000
 
 	response=jsonify(results_json)
 	response.headers.add('Access-Control-Allow-Origin', '*')
