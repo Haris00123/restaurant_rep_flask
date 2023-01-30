@@ -1,4 +1,4 @@
-bind = '0.0.0.0'
-NUM_WORKERS = 3
-TIMEOUT=120
+bind = '0.0.0.0:5000'
+workers = 3
+timeout=30000
 
