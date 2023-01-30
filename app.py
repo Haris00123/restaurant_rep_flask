@@ -1,4 +1,4 @@
-from flask import Flask 
+from flask import Flask,jsonify
 import psycopg2
 import json
 
@@ -46,7 +46,7 @@ def get_curr_cities():
 		internal_dict['city_name']=c[0].capitalize()
 		cities.append(internal_dict)
 	results_json['cities']=cities
-	response=flask.jsonify(results_json)
+	response=jsonify(results_json)
 	response.headers.add('Access-Control-Allow-Origin', '*')
 	return response
 
@@ -82,8 +82,9 @@ def get_restaurant_names(city_name):
 		restaurants.append(internal_dict)
 
 	results_json['restaurants']=restaurants	
-                 
-	return json.dumps(results_json)
+	response=jsonify(results_json)
+	response.headers.add('Access-Control-Allow-Origin', '*')
+	return response
 
 @app.get('/get_top_foods/<restaurant_id>')
 def get_top_foods(restaurant_id):
@@ -120,7 +121,9 @@ def get_top_foods(restaurant_id):
 	
 	results_json['top_foods']=top_foods
 
-	return json.dumps(results_json)
+	response=jsonify(results_json)
+	response.headers.add('Access-Control-Allow-Origin', '*')
+	return response
 
 @app.get('/get_infodetails')
 def get_info():
