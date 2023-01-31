@@ -1,0 +1,24 @@
+{% block head %}
+<h1 style="text-align:center">Marketing Analyzer</h1>
+<h4 style="text-align:center">Open sourced</h4>
+<br>
+<br>
+{% endblock %}
+{% block body %}
+<div class="content">
+    <div class="default_list" style="text-align:center">
+        Hello please either enter your own queries below or, leave the list as blank to use the default list.
+        <br>
+        <br>
+        The default list includes various commodities as keywords, as well as, various transportation key words.
+    </div>
+    <br>
+    <br>
+    <div class="form">
+        <form action="/" method="POST" style="text-align:center">
+            <input type="text" name="keywords" id="keywords">
+            <input type="submit" value="run search" style="background-color:lightgreen;font-weight:bold">
+        </form>
+    </div>
+</div>
+{% endblock %}
