@@ -1,4 +1,4 @@
-from flask import Flask,jsonify
+from flask import Flask,jsonify,request
 import psycopg2
 import json
 
@@ -86,11 +86,14 @@ def get_curr_cities():
 # 	response.headers.add('Access-Control-Allow-Origin', '*')
 # 	return response
 
-@app.get('/get_restaurants_names/<restaurant_search>')
-def get_restaurant_names(restaurant_search):
+@app.get('/get_restaurants_names')
+def get_restaurant_names():
+	res_name=request.args.get('resName')
+	res_city=request.args.get('resCity')
 	query='''SELECT * FROM top_foods_restaurants
-			WHERE SIMILARITY(restaurant_name,%s)>0.3;'''
-	values=(restaurant_search.lower(),)
+			WHERE SIMILARITY(restaurant_name,%s)>0.3
+			AND city=%s;'''
+	values=(res_name.lower(),res_city.lower())
 	#cursor.execute(query,values)
 	try:
 		cursor.execute(query,values)
@@ -123,8 +126,10 @@ def get_restaurant_names(restaurant_search):
 	response.headers.add('Access-Control-Allow-Origin', '*')
 	return response
 
-@app.get('/search_top_food/<food>')
-def get_restaurants_by_food(food):
+@app.get('/search_top_food')
+def get_restaurants_by_food():
+	food=request.args.get('Food')
+	res_city=request.args.get('resCity')
 	query='''SELECT restaurant_id,restaurant_name,restaurant_address,food  
 			FROM
 				(SELECT *, 
@@ -132,14 +137,14 @@ def get_restaurants_by_food(food):
 				FROM
 					(SELECT restaurant_id,restaurant_name,restaurant_address,food,score
 					FROM top_foods
-					WHERE SIMILARITY(food,%s)>0.5
+					WHERE SIMILARITY(food,%s)>0.5 AND city = %s
 					ORDER BY score DESC
 					LIMIT 100) AS tmp) AS tmp_2
 			WHERE rn=1
 			ORDER BY score DESC
 			LIMIT 10;
 '''
-	values=(food.lower(),)
+	values=(food.lower(),res_city.lower())
 	#cursor.execute(query,values)
 	try:
 		cursor.execute(query,values)
@@ -172,8 +177,9 @@ def get_restaurants_by_food(food):
 	response.headers.add('Access-Control-Allow-Origin', '*')
 	return response
 
-@app.get('/get_top_foods/<restaurant_id>')
-def get_top_foods(restaurant_id):
+@app.get('/get_top_foods')
+def get_top_foods():
+	restaurant_id=request.args.get('resId')
 	query='''SELECT food
 	FROM 
 	(SELECT *, DENSE_RANK() OVER (ORDER BY score DESC) AS rnk
