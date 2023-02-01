@@ -123,6 +123,55 @@ def get_restaurant_names(restaurant_search):
 	response.headers.add('Access-Control-Allow-Origin', '*')
 	return response
 
+@app.get('/search_top_food/<food>')
+def get_restaurants_by_food(food):
+	query='''SELECT restaurant_id,restaurant_name,restaurant_address,food  
+			FROM
+				(SELECT *, 
+				RANK() OVER (PARTITION BY restaurant_address ORDER BY score DESC) AS rn
+				FROM
+					(SELECT restaurant_id,restaurant_name,restaurant_address,food,score
+					FROM top_foods
+					WHERE SIMILARITY(food,'fries')>0.5
+					ORDER BY score DESC
+					LIMIT 100) AS tmp) AS tmp_2
+			WHERE rn=1
+			ORDER BY score DESC
+			LIMIT 10;
+'''
+	values=(food.lower(),)
+	#cursor.execute(query,values)
+	try:
+		cursor.execute(query,values)
+	except:
+		conn.rollback()
+		return None
+	returns=cursor.fetchall()
+	
+	results_json={}
+
+	if len(returns)>0:
+		results_json['status']='succesful'
+	else:
+		results_json['status']='unsuccesful'
+	
+	return_count=len(returns)
+	results_json['restaurant_count']=return_count
+	restaurants=[]
+
+	for r in returns:
+		internal_dict={}
+		internal_dict['id']=r[0]
+		internal_dict['restaurant_name']=r[1].capitalize()
+		internal_dict['restaurant_address']=r[2]
+		internal_dict['food']=r[3]
+		restaurants.append(internal_dict)
+
+	results_json['restaurants']=restaurants	
+	response=jsonify(results_json)
+	response.headers.add('Access-Control-Allow-Origin', '*')
+	return response
+
 @app.get('/get_top_foods/<restaurant_id>')
 def get_top_foods(restaurant_id):
 	query='''SELECT food
