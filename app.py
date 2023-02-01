@@ -132,7 +132,7 @@ def get_restaurants_by_food(food):
 				FROM
 					(SELECT restaurant_id,restaurant_name,restaurant_address,food,score
 					FROM top_foods
-					WHERE SIMILARITY(food,'fries')>0.5
+					WHERE SIMILARITY(food,%s)>0.5
 					ORDER BY score DESC
 					LIMIT 100) AS tmp) AS tmp_2
 			WHERE rn=1
