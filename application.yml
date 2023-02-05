@@ -8,7 +8,7 @@ services:
       repo: "https://github.com/Haris00123/restaurant_rep_flask"
       branch: master
     build_command: "go build ./"
-    run_command: "gunicorn -c gunicorn_config.py wsgi:app"
+    run_command: "gunicorn -c gunicorn_config.py wewew:app"
     envs:
     - key: BUILD_ONLY_VAR
       scope: BUILD_TIME
