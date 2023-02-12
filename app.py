@@ -164,9 +164,10 @@ def get_restaurants_by_food():
 	results_json['restaurant_count']=return_count
 	restaurants=[]
 
-	for r in returns:
+	for i,r in returns:
 		internal_dict={}
 		internal_dict['id']=r[0]
+		internal_dict['rank']=i+1
 		internal_dict['restaurant_name']=r[1].capitalize()
 		internal_dict['restaurant_address']=r[2]
 		internal_dict['food']=r[3]
