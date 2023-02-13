@@ -5,11 +5,14 @@ import json
 app=Flask(__name__)
 
 conn=psycopg2.connect(
-host='db-postgresql-tor1-38542-do-user-13162346-0.b.db.ondigitalocean.com',
+#host='db-postgresql-tor1-38542-do-user-13162346-0.b.db.ondigitalocean.com',
+#database='restaurant_rep',
+#port=25060,
+host='restaurantrepo.cglhegslcujy.us-east-2.rds.amazonaws.com',
 database='restaurant_rep',
-port=25060,
-user='doadmin',
-password='AVNS_YKtI3cC827SO2M3fZ12'
+port=5432,
+user='postgres',
+password='Sumran123'
 )
 
 cursor=conn.cursor()
@@ -90,6 +93,9 @@ def get_curr_cities():
 def get_restaurant_names():
 	res_name=request.args.get('resName')
 	res_city=request.args.get('resCity')
+
+	
+
 	query='''SELECT * FROM top_foods_restaurants
 			WHERE SIMILARITY(restaurant_name,%s)>0.3
 			AND city=%s;'''
