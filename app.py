@@ -164,7 +164,7 @@ def get_restaurants_by_food():
 	results_json['restaurant_count']=return_count
 	restaurants=[]
 
-	for i,r in returns:
+	for i,r in enumerate(returns):
 		internal_dict={}
 		internal_dict['id']=r[0]
 		internal_dict['rank']=i+1
