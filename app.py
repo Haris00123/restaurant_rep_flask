@@ -1,6 +1,7 @@
 from flask import Flask,jsonify,request
 import psycopg2
 import json
+import string
 
 app=Flask(__name__)
 
@@ -20,6 +21,12 @@ cursor=conn.cursor()
 @app.route('/')
 def hello():
 	return 'hello, world!'
+
+def upper_state(city):
+	pieces=city.split(', ')
+	city=pieces[0].capitalize()
+	state=pieces[1].upper()
+	return ", ".join([city,state])
 
 @app.get('/get_cities')
 def get_curr_cities():
@@ -46,7 +53,7 @@ def get_curr_cities():
 	for i,c in enumerate(returns):
 		internal_dict={}
 		internal_dict['id']=i
-		internal_dict['city_name']=c[0].capitalize()
+		internal_dict['city_name']=upper_state(c[0])
 		cities.append(internal_dict)
 	results_json['cities']=cities
 	response=jsonify(results_json)
@@ -94,7 +101,7 @@ def get_restaurant_names():
 	res_name=request.args.get('resName')
 	res_city=request.args.get('resCity')
 
-	
+
 
 	query='''SELECT * FROM top_foods_restaurants
 			WHERE SIMILARITY(restaurant_name,%s)>0.3
@@ -122,9 +129,9 @@ def get_restaurant_names():
 	for r in returns:
 		internal_dict={}
 		internal_dict['id']=r[0]
-		internal_dict['restaurant_name']=r[1].capitalize()
+		internal_dict['restaurant_name']=string.capwords(r[1])
 		internal_dict['restaurant_address']=r[2]
-		internal_dict['restaurant_city']=r[3]
+		internal_dict['restaurant_city']=upper_state(r[3])
 		restaurants.append(internal_dict)
 
 	results_json['restaurants']=restaurants	
@@ -174,7 +181,7 @@ def get_restaurants_by_food():
 		internal_dict={}
 		internal_dict['id']=r[0]
 		internal_dict['rank']=i+1
-		internal_dict['restaurant_name']=r[1].capitalize()
+		internal_dict['restaurant_name']=string.capwords(r[1])
 		internal_dict['restaurant_address']=r[2]
 		internal_dict['food']=r[3]
 		restaurants.append(internal_dict)
@@ -215,7 +222,7 @@ def get_top_foods():
 		internal_dict={}
 		internal_dict['id']=i
 		internal_dict['rank']=i+1
-		internal_dict['food']=c[0]
+		internal_dict['food']=c[0].capitalize()
 		top_foods.append(internal_dict)
 	
 	results_json['top_foods']=top_foods
@@ -229,7 +236,7 @@ def get_info():
 	results_json={}
 	results_json['status']='succesful'
 	results_json['cities']=2
-	results_json['reviews']=int(4*10e6)
+	results_json['reviews']=int(5*1e6)
 	results_json['restaurants']=10000
 
 	response=jsonify(results_json)
