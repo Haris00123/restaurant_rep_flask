@@ -5,21 +5,27 @@ import string
 
 app=Flask(__name__)
 
-conn=psycopg2.connect(
-#host='db-postgresql-tor1-38542-do-user-13162346-0.b.db.ondigitalocean.com',
-#database='restaurant_rep',
-#port=25060,
-host='restaurantrepo.cglhegslcujy.us-east-2.rds.amazonaws.com',
-database='restaurant_rep',
-port=5432,
-user='postgres',
-password='Sumran123'
-)
+def connect():
+	'''Function to connect to the AWS Database'''
+	conn=psycopg2.connect(
+	#host='db-postgresql-tor1-38542-do-user-13162346-0.b.db.ondigitalocean.com',
+	#database='restaurant_rep',
+	#port=25060,
+	host='restaurantrepo.cglhegslcujy.us-east-2.rds.amazonaws.com',
+	database='restaurant_rep',
+	port=5432,
+	user='postgres',
+	password='Sumran123'
+	)
 
-cursor=conn.cursor()
+	cursor=conn.cursor()
+
+	return cursor,conn
+
 
 @app.route('/')
 def hello():
+	
 	return 'hello, world!'
 
 def upper_state(city):
@@ -30,6 +36,7 @@ def upper_state(city):
 
 @app.get('/get_cities')
 def get_curr_cities():
+	cursor,conn=connect()
 	query='''SELECT DISTINCT(city) FROM restaurants_list'''
 	
 	try:
@@ -100,6 +107,7 @@ def get_curr_cities():
 def get_restaurant_names():
 	res_name=request.args.get('resName')
 	res_city=request.args.get('resCity')
+	cursor,conn=connect()
 
 
 
@@ -143,6 +151,7 @@ def get_restaurant_names():
 def get_restaurants_by_food():
 	food=request.args.get('Food')
 	res_city=request.args.get('resCity')
+	cursor,conn=connect()
 	query='''SELECT restaurant_id,restaurant_name,restaurant_address,food  
 			FROM
 				(SELECT *, 
@@ -194,6 +203,7 @@ def get_restaurants_by_food():
 @app.get('/get_top_foods')
 def get_top_foods():
 	restaurant_id=request.args.get('resId')
+	cursor,conn=connect()
 	query='''SELECT food
 	FROM 
 	(SELECT *, DENSE_RANK() OVER (ORDER BY score DESC) AS rnk
@@ -235,8 +245,8 @@ def get_top_foods():
 def get_info():
 	results_json={}
 	results_json['status']='succesful'
-	results_json['cities']=2
-	results_json['reviews']=int(5*1e6)
+	results_json['cities']=3
+	results_json['reviews']=int(10*1e6)
 	results_json['restaurants']=10000
 
 	response=jsonify(results_json)
