@@ -245,9 +245,9 @@ def get_top_foods():
 def get_info():
 	results_json={}
 	results_json['status']='succesful'
-	results_json['cities']=4
-	results_json['reviews']=int(15*1e6)
-	results_json['restaurants']=18000
+	results_json['cities']=5
+	results_json['reviews']=int(20*1e6)
+	results_json['restaurants']=25000
 
 	response=jsonify(results_json)
 	response.headers.add('Access-Control-Allow-Origin', '*')
